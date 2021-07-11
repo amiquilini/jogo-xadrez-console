@@ -9,7 +9,9 @@ namespace jogo_xadrez_console
         {
             Tabuleiro tab = new Tabuleiro(8, 8);
 
-            Console.WriteLine();
+            Tela.ImprimirTabuleiro(tab);
+
+            Console.ReadLine();
         }
     }
 }
