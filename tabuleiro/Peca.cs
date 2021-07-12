@@ -24,7 +24,6 @@ namespace tabuleiro
         {
             qteMovimentos--;
         }
-
         public bool ExisteMovimentosPossiveis()
         {
             bool[,] mat = MovimentosPossiveis();
