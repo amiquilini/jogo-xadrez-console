@@ -2,6 +2,8 @@
 using tabuleiro;
 using xadrez;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace jogo_xadrez_console
 {
@@ -24,7 +26,8 @@ namespace jogo_xadrez_console
                     Console.WriteLine("XEQUE!");
                 }
             }
-            else {
+            else
+            {
                 Console.WriteLine();
                 Console.WriteLine("XEQUEMATE!");
                 Console.WriteLine();
@@ -101,9 +104,12 @@ namespace jogo_xadrez_console
         public static PosicaoXadrez LerPosicaoXadrez()
         {
             string s = Console.ReadLine();
+            if(!(s.Length == 2 && Regex.IsMatch(s[0].ToString(), @"^[a-hA-H]+$") && Regex.IsMatch(s[1].ToString(), @"^[1-8]+$")))
+            {
+                throw new TabuleiroException("Posição inválida!");
+            }
             char coluna = s[0];
-            int linha = int.Parse(s[1] + "");
-
+            int linha = int.Parse(s[1].ToString());
             return new PosicaoXadrez(coluna, linha);
         }
         public static void ImprimirPeca(Peca peca)
