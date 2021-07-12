@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System;
 using tabuleiro;
 
 namespace xadrez
@@ -143,6 +144,36 @@ namespace xadrez
                 throw new TabuleiroException("Você não pode se colocar em xeque!");
 
             }
+
+            Peca p = tab.Peca(destino);
+
+            // #jogadaespecial promocao
+            if (p is Peao)
+            {
+                if (p.cor == Cor.Branca && destino.linha == 0 || p.cor == Cor.Preta && destino.linha == 7)
+                {
+                    Console.WriteLine();
+                    Console.Write("Escolha a peça para a promoção (D, T, B, C): ");
+                    char pecaEscolhida = char.Parse(Console.ReadLine());
+
+                    Peca pecaPromovida = PromoverPeao(p, pecaEscolhida);
+
+                    if (pecaPromovida == null)
+                    {
+                        DesfazMovimento(origem, destino, pecaCapturada);
+                        throw new TabuleiroException("Peça inválida!");
+                    }
+                    else
+                    {
+                        p = tab.RetirarPeca(destino);
+                        pecas.Remove(p);
+
+                        tab.ColocarPeca(pecaPromovida, destino);
+                        pecas.Add(pecaPromovida);
+                    }
+                }
+            }
+
             if (EstaEmXeque(Adversaria(jogadorAtual)))
             {
                 xeque = true;
@@ -161,8 +192,6 @@ namespace xadrez
                 MudaJogador();
             }
 
-            Peca p = tab.Peca(destino);
-
             // #jogadaespecial en passant
             if (p is Peao && (destino.linha == origem.linha - 2 || destino.linha == origem.linha + 2))
             {
@@ -171,6 +200,29 @@ namespace xadrez
             else
             {
                 vulneravelEnPassant = null;
+            }
+        }
+
+        private Peca PromoverPeao(Peca peaoPromovido, char pecaEscolhida) {
+            if (pecaEscolhida == 'D' || pecaEscolhida == 'd')
+            {
+                return new Dama(tab, peaoPromovido.cor);
+            }
+            else if (pecaEscolhida == 'T' || pecaEscolhida == 't')
+            {
+                return new Torre(tab, peaoPromovido.cor);
+            }
+            else if (pecaEscolhida == 'B' || pecaEscolhida == 'b')
+            {
+                return new Bispo(tab, peaoPromovido.cor);
+            }
+            else if (pecaEscolhida == 'C' || pecaEscolhida == 'c')
+            {
+                return new Cavalo(tab, peaoPromovido.cor);
+            }
+            else
+            {
+                return null;
             }
         }
 
